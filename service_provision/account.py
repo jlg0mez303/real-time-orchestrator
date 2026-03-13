@@ -12,8 +12,8 @@ TOKEN = os.getenv("DEV_TOKEN")
 class Account:
     def __init__(self, external_id, name=None, description=None):
         self.external_id = external_id
-        self.name = name
-        self.description = description
+        self.name = name if name is not None else "No name set"
+        self.description = description if description is not None else "No description set"
 
     def create_account(self):
         url = f"{URL}/service-provision-service/service-provision/account"
@@ -52,8 +52,12 @@ class Account:
             {
                 "externalId": self.external_id,
                 "name": name if name is not None else self.name,
-                "description": description if description is not None else self.description,
-                "newExternalId": new_external_id if new_external_id is not None else self.external_id,
+                "description": (
+                    description if description is not None else self.description
+                ),
+                "newExternalId": (
+                    new_external_id if new_external_id is not None else self.external_id
+                ),
             }
         )
         headers = {
@@ -61,7 +65,7 @@ class Account:
             "x-api-key": TOKEN,
             "Content-Type": "application/json",
         }
-
+        self.external_id = new_external_id if new_external_id is not None else self.external_id
         response = requests.put(url, headers=headers, data=payload)
 
         return response
