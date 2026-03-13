@@ -45,15 +45,15 @@ class Account:
 
         return response
 
-    def update_account(self):
+    def update_account(self, new_external_id=None, name=None, description=None):
         url = f"{URL}/service-provision-service/service-provision/account"
 
         payload = json.dumps(
             {
-                "externalId": "ruby.test.01.update",
-                "name": "AO 7 testing",
-                "description": "AO 7 environment testing account",
-                "newExternalId": "ruby.test.01",
+                "externalId": self.external_id,
+                "name": name if name is not None else self.name,
+                "description": description if description is not None else self.description,
+                "newExternalId": new_external_id if new_external_id is not None else self.external_id,
             }
         )
         headers = {
